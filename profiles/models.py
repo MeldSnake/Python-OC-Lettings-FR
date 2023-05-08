@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="+")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     favorite_city = models.CharField(max_length=64, blank=True)
 
     class Meta:
