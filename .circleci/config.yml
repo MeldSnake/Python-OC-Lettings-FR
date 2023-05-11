@@ -56,7 +56,7 @@ workflows:
               only: master
       - publish:
           requires:
-            - deploy
+            - build_test
           filters:
             branches:
               only: master
