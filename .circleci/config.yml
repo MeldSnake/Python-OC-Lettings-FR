@@ -2,11 +2,13 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.1.1
+  docker: circleci/docker@2.2.0
 
 executors:
   python:
     docker:
       - image: cimg/python:3.11.0
+    resource_class: small
 
 jobs:
   build_test:
@@ -18,20 +20,12 @@ jobs:
           args: "flake8"
       - run:
           command: |
-            pytest
-          name: Test
-      - run:
-          command: |
             flake8
           name: Linting
-
-  deploy:
-    executor: python
-    steps:
       - run:
           command: |
-            echo TODO Deploy
-          name: Deploy
+            pytest
+          name: Test
 
   publish:
     executor: python
@@ -46,7 +40,15 @@ workflows:
   build_test:
     jobs:
       - build_test
-      - deploy:
+      - docker/publish:
+          deploy: true
+          # Set Env variable DOCKER_LOGIN to the docker registry username
+          # Set Env variable DOCKER_PASSWORD to the docker registry password, See personal access tokens.
+          # Set the registry to use (default to docker.io)
+          # registry: ${DOCKER_REGISTRY}
+          image: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+          update-description: true
+          tag: << pipeline.git.revision >>
           requires:
             - build_test
           filters:
