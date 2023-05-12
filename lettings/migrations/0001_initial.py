@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('oc_lettings_site', '0001_initial'),
     ]
 
     operations = [
