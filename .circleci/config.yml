@@ -57,7 +57,7 @@ workflows:
           # Set Env variable DOCKER_PASSWORD to the docker registry password, See personal access tokens.
           # Set the registry to use (default to docker.io)
           # registry: ${DOCKER_REGISTRY}
-          image: ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+          image: meldsnake/oc-lettings-fr
           update-description: true
           tag: << pipeline.git.revision >>
           requires:
