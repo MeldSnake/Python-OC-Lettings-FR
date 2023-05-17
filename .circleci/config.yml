@@ -59,7 +59,7 @@ workflows:
           # registry: ${DOCKER_REGISTRY}
           image: meldsnake/oc-lettings-fr
           update-description: true
-          tag: << pipeline.git.revision >>
+          tag: latest
           requires:
             - build_test
           filters:
