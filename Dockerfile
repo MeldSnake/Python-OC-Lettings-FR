@@ -15,6 +15,9 @@ COPY . .
 # Create/Initialize the db on the docker image
 RUN [ "python", "manage.py", "migrate" ]
 
+# Collect static files
+RUN [ "python", "manage.py", "collectstatic", "--noinput" ]
+
 # Expose the port that the local server use in order for docker to know of it.
 EXPOSE 8000
 
