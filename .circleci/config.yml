@@ -45,18 +45,18 @@ jobs:
       - checkout
       - setup_remote_docker
       - docker/check:
-          registry: docker.io
+          registry: ${DOCKER_REGISTRY}
       - docker/build:
-          image: meldsnake/oc-lettings-fr
-          tag: latest
-          registry: docker.io
+          image: ${DOCKER_IMAGE_NAME}
+          tag: ${DOCKER_PROD_TAG}
+          registry: ${DOCKER_REGISTRY}
       - docker/push:
-          image: meldsnake/oc-lettings-fr
-          registry: docker.io
-          tag: latest
+          image: ${DOCKER_IMAGE_NAME}
+          registry: ${DOCKER_REGISTRY}
+          tag: ${DOCKER_PROD_TAG}
       - docker/update-description:
-          image: meldsnake/oc-lettings-fr
-          registry: docker.io
+          image: ${DOCKER_IMAGE_NAME}
+          registry: ${DOCKER_REGISTRY}
   
   publish:
     executor: python
@@ -65,12 +65,11 @@ jobs:
         - setup_remote_docker
         - heroku/check-authentication
         - checkout
-        # - heroku/deploy-via-git
         - heroku/push-docker-image:
-            app-name: mld-lettings-fr
+            app-name: ${HEROKU_APP_NAME}
             process-types: web
         - heroku/release-docker-image:
-            app-name: mld-lettings-fr
+            app-name: ${HEROKU_APP_NAME}
             process-types: web
 
 workflows:
