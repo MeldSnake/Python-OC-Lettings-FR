@@ -39,15 +39,16 @@ jobs:
       - store_test_results:
           path: test-results
 
-  containerize:
-    executor: docker/docker
+  containerise:
+    executor: python
     steps:
       - checkout
+      - setup_remote_docker
       - docker/check:
           registry: docker.io
-          use-docker-credentials-store: false
       - docker/build:
           image: meldsnake/oc-lettings-fr
+          tag: latest
           registry: docker.io
       - docker/push:
           image: meldsnake/oc-lettings-fr
@@ -60,13 +61,16 @@ jobs:
   publish:
     executor: python
     steps:
-        - checkout
         - heroku/install
-        - heroku/deploy-via-git
-        # - heroku/push-docker-image:
-        #     process-types: web
-        # - heroku/release-docker-image:
-        #     process-types: web
+        - heroku/check-authentication
+        - checkout
+        # - heroku/deploy-via-git
+        - heroku/push-docker-image:
+            app-name: mld-lettings-fr
+            process-types: web
+        - heroku/release-docker-image:
+            app-name: mld-lettings-fr
+            process-types: web
 
 workflows:
   version: 2
