@@ -65,12 +65,17 @@ jobs:
         - setup_remote_docker
         - heroku/check-authentication
         - checkout
-        - heroku/push-docker-image:
-            app-name: HEROKU_APP_NAME
-            process-types: web
-        - heroku/release-docker-image:
-            app-name: HEROKU_APP_NAME
-            process-types: web
+        - run:
+            command: heroku container:login
+            name: Login to Heroku Docker image registry
+        - run:
+            command: heroku container:push -a "${HEROKU_APP_NAME}" web
+            name: Push a Docker image to the Heroku Docker registry
+            no_output_timeout: 10m
+        - run:
+            command: heroku container:release -a "${HEROKU_APP_NAME}" web
+            name: Release a Docker image from the Heroku Docker registry
+            no_output_timeout: 10m
 
 workflows:
   version: 2
