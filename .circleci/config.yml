@@ -62,10 +62,11 @@ jobs:
     steps:
         - checkout
         - heroku/install
-        - heroku/push-docker-image:
-            process-types: web
-        - heroku/release-docker-image:
-            process-types: web
+        - heroku/deploy-via-git
+        # - heroku/push-docker-image:
+        #     process-types: web
+        # - heroku/release-docker-image:
+        #     process-types: web
 
 workflows:
   version: 2
