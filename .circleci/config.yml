@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   python: circleci/python@2.1.1
   docker: circleci/docker@2.2.0
+  heroku: circleci/heroku@2.0.0
 
 executors:
   python:
@@ -38,28 +39,40 @@ jobs:
       - store_test_results:
           path: test-results
 
+  containerize:
+    executor: docker/docker
+    steps:
+      - checkout
+      - docker/check:
+          registry: docker.io
+          use-docker-credentials-store: false
+      - docker/build:
+          image: meldsnake/oc-lettings-fr
+          registry: docker.io
+      - docker/push:
+          image: meldsnake/oc-lettings-fr
+          registry: docker.io
+          tag: latest
+      - docker/update-description:
+          image: meldsnake/oc-lettings-fr
+          registry: docker.io
+  
   publish:
     executor: python
     steps:
-      - run:
-          command: |
-              echo Ok
-          name: Publish
+        - checkout
+        - heroku/install
+        - heroku/push-docker-image:
+            process-types: web
+        - heroku/release-docker-image:
+            process-types: web
 
 workflows:
   version: 2
   build_test:
     jobs:
       - build_test
-      - docker/publish:
-          deploy: true
-          # Set Env variable DOCKER_LOGIN to the docker registry username
-          # Set Env variable DOCKER_PASSWORD to the docker registry password, See personal access tokens.
-          # Set the registry to use (default to docker.io)
-          # registry: ${DOCKER_REGISTRY}
-          image: meldsnake/oc-lettings-fr
-          update-description: true
-          tag: latest
+      - containerize:
           requires:
             - build_test
           filters:
@@ -67,7 +80,7 @@ workflows:
               only: master
       - publish:
           requires:
-            - build_test
+            - containerize
           filters:
             branches:
               only: master
