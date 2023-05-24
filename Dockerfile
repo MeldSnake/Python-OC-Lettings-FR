@@ -19,11 +19,11 @@ RUN [ "python", "manage.py", "migrate" ]
 RUN [ "python", "manage.py", "collectstatic", "--noinput" ]
 
 # Set default port usage for local uses.
-ENV PORT 8000
+ENV PORT=${PORT:-8000}
 
 # Expose the port that the local server will use, this is used only for documentation.
 # Heroku will not be using this port, it will be using the PORT environement variable.
 EXPOSE 8000
 
 # Command executed to actually run the server
-CMD [ "gunicorn", "--bind", "0.0.0.0:${PORT}", "oc_lettings_site.wsgi:application" ]
+CMD gunicorn --bind 0.0.0.0:${PORT} oc_lettings_site.wsgi:application
