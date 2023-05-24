@@ -62,6 +62,7 @@ jobs:
     executor: python
     steps:
         - heroku/install
+        - setup_remote_docker
         - heroku/check-authentication
         - checkout
         # - heroku/deploy-via-git
