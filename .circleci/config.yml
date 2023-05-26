@@ -21,16 +21,16 @@ jobs:
           args: "flake8"
       - run:
           command: |
+            flake8
+          name: Linting
+      - run:
+          command: |
             python manage.py migrate
             mv oc-lettings-site.sqlite3 oc-lettings-site.origin.sqlite3
             python manage.py migrate
             rm oc-lettings-site.sqlite3
             mv oc-lettings-site.origin.sqlite3 oc-lettings-site.sqlite3
           name: Migrations
-      - run:
-          command: |
-            flake8
-          name: Linting
       - run:
           command: |
             mkdir test-results

@@ -75,3 +75,35 @@ Utilisation de PowerShell, comme ci-dessus sauf :
 
 - Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
 - Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+
+
+### Déploiement
+
+Le site web est deployer via CircleCI sur la plateforme Heroku a l'adresse suivante: [mld-oc-lettings.herokuapp.com/](https://mld-oc-lettings.herokuapp.com/) .
+**Lorsqu'un ou plusieurs nouveaux commits** sont publiés sur le repository git, CircleCI effectue **automatiquement un déploiement** en suivant les instructions suivantes décrites dans le fichier [config.yml](.circleci/config.yml), soit:
+1. **Compilation, Test et Verification de la Pep8.**
+    1. Installation des **dépendances** du fichier [requirements.txt](requirements.txt).
+    2. Verification de la **pep8** via l'utilitaire **flake8**.
+    3. Test des fichiers de **migrations**
+        - Avec une base de donnée *non-existante*.
+        - Avec une base de donnée *existante*.
+    4. Lancement des **tests** avec la commande **pytest**.
+2. **Creation d'une image Docker** via le fichier [Dockerfile](Dockerfile) sur le registre [docker.io](https://hub.docker.com/repository/docker/meldsnake/oc-lettings-fr/general) avec le tag `latest`.
+3. **Deploiement de l'image Docker sur Heroku**
+    - L'image est publié sur le registry de heroku puis délivrée sur le serveur de l'application via la commande CLI `heroku`.
+
+*nb: Les étapes de creation de l'image et de déploiement sont effectué seulement sur la branche `master`*
+
+Afin de pouvoir repliquer les etapes sur un autre serveur, les variables d'environement suivantes pour chaque service sont requise:
+- CircleCI :
+    - **DOCKER_REGISTRY** : Le registre docker utilisé *(ici: `docker.io`)*
+    - **DOCKER_IMAGE_NAME** : Le nom de l'image docker sur le registre *(ici: `meldsnake/.oc-lettings-fr`)*
+    - **DOCKER_LOGIN** et **DOCKER_PASSWORD** : Le nom d'utilisateur et le mot de passe du compte utilisé pour la publication de l'image
+    - **DOCKER_PROD_TAG** : Le tag utilisé lor de la publication de l'image *(ici: `latest`)*
+    - **HEROKU_API_KEY** : La clé d'API pour Heroku permettant de publier l'image sur le server Heroku.
+    - **HEROKU_APP_NAME** : Nom de l'application Heroku utilisée *(ici: `mld-oc-lettings`)*.
+- Heroku :
+    - **DJANGO_ALLOWED_HOSTS** : une liste de nom de domaine ou d’hôte séparés par une virgule *(ici: `.herokuapp.com,localhost`)* [doc](https://docs.djangoproject.com/fr/3.0/ref/settings/#allowed-hosts)
+    - **DJANGO_DEBUG** : Valeur `True` si les serveur est un serveur de test.
+    - **DJANGO_SECRET_KEY** : Clé de signature cryptographique de l'application django, voir le repository original pour la clé. *(ici: `fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s`)*
+    - **SENTRY_URI** : *Optionel*, l'adresse du point d'entré de [Sentry](https://sentry.io/) pour la récupération des évènements d'erreur.

@@ -4,7 +4,7 @@ from django.urls import path, include
 from . import views
 
 
-def trigger_error():
+def trigger_error(*args, **kwargs):
     _ = 12 / 0
 
 
