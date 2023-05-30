@@ -119,12 +119,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Sentry Configuration
 
-SENTRY_URI = os.getenv("SENTRY_API", "")
+SENTRY_API = os.getenv("SENTRY_API", "")
 
-if SENTRY_URI != "":
+if SENTRY_API != "":
 
     sentry_sdk.init(
-        dsn=SENTRY_URI,
+        dsn=SENTRY_API,
         integrations=[
             DjangoIntegration(),
         ],

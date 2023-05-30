@@ -106,4 +106,4 @@ Afin de pouvoir repliquer les etapes sur un autre serveur, les variables d'envir
     - **DJANGO_ALLOWED_HOSTS** : une liste de nom de domaine ou d’hôte séparés par une virgule *(ici: `.herokuapp.com,localhost`)* [doc](https://docs.djangoproject.com/fr/3.0/ref/settings/#allowed-hosts)
     - **DJANGO_DEBUG** : Valeur `True` si les serveur est un serveur de test.
     - **DJANGO_SECRET_KEY** : Clé de signature cryptographique de l'application django, voir le repository original pour la clé. *(ici: `fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s`)*
-    - **SENTRY_URI** : *Optionel*, l'adresse du point d'entré de [Sentry](https://sentry.io/) pour la récupération des évènements d'erreur.
+    - **SENTRY_API** : *Optionel*, l'adresse du point d'entré de [Sentry](https://sentry.io/) pour la récupération des évènements d'erreur.
